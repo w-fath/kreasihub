@@ -42,7 +42,7 @@ export function RegisterPage() {
       {/* Header */}
       <header className="w-full flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <div className="flex items-center space-x-12">
-          <h1 className="text-3xl font-black italic tracking-tighter uppercase">ETCH</h1>
+          <a href="/" className="text-3xl font-black italic tracking-tighter uppercase text-black hover:opacity-80">ETCH</a>
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Jelajahi</a>
             <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Kreator</a>
@@ -50,10 +50,12 @@ export function RegisterPage() {
           </nav>
         </div>
         <div className="flex items-center space-x-6">
-          <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Daftar</a>
-          <Button className="bg-black text-white hover:bg-gray-800 rounded-lg px-6 py-2 h-10 font-bold border border-black">
-            Masuk
-          </Button>
+          <a href="/register" className="text-sm font-bold hover:text-gray-600 transition-colors">Daftar</a>
+          <a href="/login">
+            <Button className="bg-black text-white hover:bg-gray-800 rounded-lg px-6 py-2 h-10 font-bold border border-black">
+              Masuk
+            </Button>
+          </a>
         </div>
       </header>
 
