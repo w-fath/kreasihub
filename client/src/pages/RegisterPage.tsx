@@ -1,8 +1,7 @@
 import React from 'react';
-import { User, Lock } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
@@ -25,7 +24,7 @@ const XIcon = () => (
   </svg>
 );
 
-export function LoginPage() {
+export function RegisterPage() {
   return (
     <div className="min-h-screen bg-white font-sans text-neutral-dark flex flex-col">
       {/* Header */}
@@ -39,7 +38,7 @@ export function LoginPage() {
           </nav>
         </div>
         <div className="flex items-center space-x-6">
-          <a href="/register" className="text-sm font-bold hover:text-gray-600 transition-colors">Daftar</a>
+          <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Daftar</a>
           <Button className="bg-black text-white hover:bg-gray-800 rounded-lg px-6 py-2 h-10 font-bold border border-black">
             Masuk
           </Button>
@@ -52,35 +51,36 @@ export function LoginPage() {
           {/* Custom Card styling to match the specific shadow effect */}
           <div className="bg-white rounded-[20px] border border-gray-200 shadow-[6px_6px_0px_0px_rgba(220,220,220,0.5)] p-10">
             <div className="flex flex-col items-center mb-10">
-              <h2 className="text-3xl font-bold tracking-wide">MASUK</h2>
+              <h2 className="text-3xl font-bold tracking-wide">DAFTAR</h2>
             </div>
             
             <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
               <Input
-                type="text"
-                placeholder="masukan email atau nama"
-                leftIcon={<User size={18} className="text-black" strokeWidth={2.5} />}
+                type="email"
+                placeholder="Masukan Email"
+                leftIcon={<Mail size={18} className="text-black" strokeWidth={2.5} />}
                 className="rounded-full border-gray-300 font-medium placeholder:text-gray-400 placeholder:font-medium h-12"
               />
               
               <Input
                 type="password"
-                placeholder="masukan password"
+                placeholder="Masukan password"
+                leftIcon={<Lock size={18} className="text-black" strokeWidth={2.5} />}
+                className="rounded-full border-gray-300 font-medium placeholder:text-gray-400 placeholder:font-medium h-12"
+              />
+
+              <Input
+                type="password"
+                placeholder="Konfirmasi Password"
                 leftIcon={<Lock size={18} className="text-black" strokeWidth={2.5} />}
                 className="rounded-full border-gray-300 font-medium placeholder:text-gray-400 placeholder:font-medium h-12"
               />
               
-              <div className="flex justify-start pt-1">
-                <a href="#" className="text-xs font-bold text-gray-400 hover:text-gray-600">
-                  Lupa Password?
-                </a>
-              </div>
-              
               <Button 
                 type="submit" 
-                className="w-full rounded-full bg-black text-white hover:bg-gray-800 h-12 font-bold text-lg mt-2"
+                className="w-full rounded-full bg-black text-white hover:bg-gray-800 h-12 font-bold text-lg mt-6"
               >
-                Masuk
+                Daftar
               </Button>
             </form>
 
@@ -102,7 +102,7 @@ export function LoginPage() {
               </div>
               
               <p className="text-xs font-bold text-gray-400">
-                belum memiliki akun? <a href="/register" className="text-gray-400 hover:text-gray-600">Daftar</a>
+                sudah memiliki akun? <a href="/" className="text-gray-400 hover:text-gray-600">masuk</a>
               </p>
             </div>
           </div>
