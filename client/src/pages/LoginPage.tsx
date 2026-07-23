@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Lock } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -26,6 +26,14 @@ const XIcon = () => (
 );
 
 export function LoginPage() {
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulasi error ketika tombol Masuk diklik
+    setError('Email atau password salah silahkan coba lagi!');
+  };
+
   return (
     <div className="min-h-screen bg-white font-sans text-neutral-dark flex flex-col">
       {/* Header */}
@@ -51,11 +59,14 @@ export function LoginPage() {
         <div className="w-full max-w-md">
           {/* Custom Card styling to match the specific shadow effect */}
           <div className="bg-white rounded-[20px] border border-gray-200 shadow-[6px_6px_0px_0px_rgba(220,220,220,0.5)] p-10">
-            <div className="flex flex-col items-center mb-10">
+            <div className="flex flex-col items-center mb-8">
               <h2 className="text-3xl font-bold tracking-wide">MASUK</h2>
+              {error && (
+                <p className="text-accent-error text-sm mt-4 font-medium">{error}</p>
+              )}
             </div>
             
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <Input
                 type="text"
                 placeholder="masukan email atau nama"
