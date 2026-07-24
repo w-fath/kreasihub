@@ -13,6 +13,15 @@ KreasiHub dikembangkan untuk:
 - Mendukung pengelolaan profil dan portofolio kreator.
 - Menerapkan pengembangan frontend, backend, dan basis data dalam satu aplikasi web.
 
+
+## Tim Pengembang
+
+| Nama | Tanggung Jawab |
+|---|---|
+| Rama | UI/UX |
+| Ari Setia Hinanda | Frontend |
+| Fathor Rozi | Backend |
+
 ## Teknologi yang Digunakan
 
 ### Frontend
@@ -262,14 +271,6 @@ git push -u origin feature/nama-fitur
 ```
 
 Kemudian buat Pull Request dari branch fitur menuju `main`.
-
-## Tim Pengembang
-
-| Nama | Tanggung Jawab |
-|---|---|
-| Rama | UI/UX |
-| Ari Setia Hinanda | Frontend |
-| Fathor Rozi | Backend |
 
 ## Status Project
 
