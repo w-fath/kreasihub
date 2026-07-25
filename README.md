@@ -18,7 +18,7 @@ KreasiHub dikembangkan untuk:
 
 | Nama | Tanggung Jawab |
 |---|---|
-| Rama | UI/UX |
+| Rama Dhaniaji Refin | UI/UX |
 | Ari Setia Hinanda | Frontend |
 | Fathor Rozi | Backend |
 
