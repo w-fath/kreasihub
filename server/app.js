@@ -5,6 +5,8 @@ const cors = require('cors');
 
 const database = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -12,17 +14,8 @@ const PORT = Number(process.env.PORT || 3000);
 app.use(
     cors({
         origin: 'http://localhost:5173',
-        methods: [
-            'GET',
-            'POST',
-            'PUT',
-            'PATCH',
-            'DELETE',
-        ],
-        allowedHeaders: [
-            'Content-Type',
-            'Authorization',
-        ],
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
 
@@ -37,6 +30,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({
@@ -54,16 +49,10 @@ const startServer = async () => {
         connection.release();
 
         app.listen(PORT, () => {
-            console.log(
-                `Server berjalan di http://localhost:${PORT}`
-            );
+            console.log(`Server berjalan di http://localhost:${PORT}`);
         });
     } catch (error) {
-        console.error(
-            'Gagal terhubung ke database:',
-            error.message
-        );
-
+        console.error('Gagal terhubung ke database:', error.message);
         process.exit(1);
     }
 };
