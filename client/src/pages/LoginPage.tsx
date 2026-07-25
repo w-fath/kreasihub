@@ -110,12 +110,20 @@ export function LoginPage() {
       setSuccess(result.message || "Login berhasil.");
 
       window.setTimeout(() => {
+        if (result.data?.role === "admin") {
+          window.location.href = "/dashboard/admin";
+          return;
+        }
+
         if (result.data?.role === "creator") {
           window.location.href = "/dashboard/creator";
           return;
         }
 
-        window.location.href = "/";
+        localStorage.removeItem("kreasihub_token");
+        localStorage.removeItem("kreasihub_user");
+
+        setError("Role pengguna tidak dikenali.");
       }, 800);
     } catch (requestError) {
       console.error("Login request error:", requestError);
