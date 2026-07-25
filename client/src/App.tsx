@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { CreatorDashboard } from "./pages/dashboard/creator/Dashboard";
+import { AdminDashboard } from "./pages/dashboard/admin/Ringkasan";
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard/creator" element={<CreatorDashboard />} />
+        <Route path="/dashboard/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );
