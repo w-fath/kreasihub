@@ -319,12 +319,14 @@ export function ProfilePage() {
                 <p className="text-xs text-gray-500 font-medium mt-0.5">Projek</p>
               </div>
             </div>
-            <button
-              id="edit-profile-btn"
-              className="bg-black text-white text-xs font-bold px-5 py-2 rounded-full hover:bg-gray-800 transition-colors"
-            >
-              EDIT PROFILE
-            </button>
+            <a href="/profile/edit">
+              <button
+                id="edit-profile-btn"
+                className="bg-black text-white text-xs font-bold px-5 py-2 rounded-full hover:bg-gray-800 transition-colors"
+              >
+                EDIT PROFILE
+              </button>
+            </a>
           </div>
         </div>
 
