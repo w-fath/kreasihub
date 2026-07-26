@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   ArrowLeft,
@@ -10,7 +10,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CreatorSection } from "../components/CreatorSection";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -19,9 +19,6 @@ type Category = {
   id: number;
   name: string;
   slug: string;
-  total: number;
-  created_at: string;
-  updated_at: string;
 };
 
 type CategoriesResponse = {
@@ -30,14 +27,26 @@ type CategoriesResponse = {
   data?: Category[];
 };
 
-type FormData = {
+type WorkResponse = {
+  success: boolean;
+  message: string;
+  data?: {
+    id: number;
+    title: string;
+    slug: string;
+    status: string;
+    thumbnail_url: string;
+  };
+};
+
+type WorkFormData = {
   title: string;
   categoryId: string;
   description: string;
   projectUrl: string;
 };
 
-const initialFormData: FormData = {
+const initialFormData: WorkFormData = {
   title: "",
   categoryId: "",
   description: "",
@@ -45,18 +54,36 @@ const initialFormData: FormData = {
 };
 
 export function TambahKaryaPage() {
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const navigate = useNavigate();
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [formData, setFormData] = useState<WorkFormData>(initialFormData);
 
   const [categories, setCategories] = useState<Category[]>([]);
+
   const [loadingCategories, setLoadingCategories] = useState(true);
+
   const [categoryError, setCategoryError] = useState<string | null>(null);
 
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
   const [error, setError] = useState<string | null>(null);
+
   const [message, setMessage] = useState<string | null>(null);
+
   const [submitting, setSubmitting] = useState(false);
+
+  const handleUnauthorized = () => {
+    localStorage.removeItem("kreasihub_token");
+    localStorage.removeItem("kreasihub_user");
+
+    navigate("/login", {
+      replace: true,
+    });
+  };
 
   const getCategories = async () => {
     try {
@@ -74,9 +101,7 @@ export function TambahKaryaPage() {
 
       if (!response.ok || !result.success || !result.data) {
         setCategories([]);
-        setCategoryError(
-          result.message || "Kategori karya gagal diambil dari server.",
-        );
+        setCategoryError(result.message || "Kategori karya gagal diambil.");
         return;
       }
 
@@ -94,6 +119,14 @@ export function TambahKaryaPage() {
   useEffect(() => {
     void getCategories();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreview) {
+        URL.revokeObjectURL(thumbnailPreview);
+      }
+    };
+  }, [thumbnailPreview]);
 
   const handleChange = (
     event: ChangeEvent<
@@ -119,39 +152,47 @@ export function TambahKaryaPage() {
     }
 
     const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+
     const maximumSize = 5 * 1024 * 1024;
 
     if (!allowedTypes.includes(file.type)) {
       setError("Thumbnail harus menggunakan format PNG, JPG, JPEG, atau WEBP.");
+
       event.target.value = "";
       return;
     }
 
     if (file.size > maximumSize) {
       setError("Ukuran thumbnail maksimal 5 MB.");
+
       event.target.value = "";
       return;
     }
 
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview);
-    }
-
-    const previewUrl = URL.createObjectURL(file);
-
     setThumbnail(file);
-    setThumbnailPreview(previewUrl);
+    setThumbnailPreview(URL.createObjectURL(file));
     setError(null);
     setMessage(null);
   };
 
   const removeThumbnail = () => {
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview);
-    }
-
     setThumbnail(null);
     setThumbnailPreview(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const resetForm = () => {
+    setFormData(initialFormData);
+    setThumbnail(null);
+    setThumbnailPreview(null);
+    setError(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -160,8 +201,20 @@ export function TambahKaryaPage() {
     setError(null);
     setMessage(null);
 
+    const token = localStorage.getItem("kreasihub_token");
+
+    if (!token) {
+      handleUnauthorized();
+      return;
+    }
+
     if (!formData.title.trim()) {
       setError("Judul karya wajib diisi.");
+      return;
+    }
+
+    if (formData.title.trim().length < 3) {
+      setError("Judul karya minimal 3 karakter.");
       return;
     }
 
@@ -172,6 +225,11 @@ export function TambahKaryaPage() {
 
     if (!formData.description.trim()) {
       setError("Deskripsi karya wajib diisi.");
+      return;
+    }
+
+    if (formData.description.trim().length < 10) {
+      setError("Deskripsi karya minimal 10 karakter.");
       return;
     }
 
@@ -192,45 +250,60 @@ export function TambahKaryaPage() {
     try {
       setSubmitting(true);
 
-      /*
-       * Data yang nanti dikirim ke backend:
-       *
-       * title: formData.title
-       * category_id: formData.categoryId
-       * description: formData.description
-       * project_url: formData.projectUrl
-       * thumbnail: thumbnail
-       */
+      const requestData = new FormData();
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      requestData.append("title", formData.title.trim());
 
-      const selectedCategory = categories.find(
-        (category) => category.id === Number(formData.categoryId),
-      );
+      requestData.append("category_id", formData.categoryId);
 
-      setMessage(
-        `Data karya sudah valid dengan kategori ${
-          selectedCategory?.name || "yang dipilih"
-        }. Penyimpanan karya ke database akan dibuat pada tahap berikutnya.`,
-      );
+      requestData.append("description", formData.description.trim());
+
+      requestData.append("project_url", formData.projectUrl.trim());
+
+      requestData.append("thumbnail", thumbnail);
+
+      const response = await fetch(`${API_URL}/api/creator/works`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: requestData,
+      });
+
+      const result = (await response.json()) as WorkResponse;
+
+      if (response.status === 401) {
+        handleUnauthorized();
+        return;
+      }
+
+      if (response.status === 403) {
+        setError("Kamu tidak memiliki akses untuk menambahkan karya.");
+        return;
+      }
+
+      if (!response.ok || !result.success) {
+        setError(result.message || "Karya gagal disimpan.");
+        return;
+      }
+
+      setFormData(initialFormData);
+      setThumbnail(null);
+      setThumbnailPreview(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      setMessage(result.message || "Karya berhasil ditambahkan.");
     } catch (submitError) {
-      console.error("Submit artwork error:", submitError);
-      setError("Terjadi kesalahan saat menyimpan karya.");
+      console.error("Submit work error:", submitError);
+
+      setError("Tidak dapat terhubung ke server.");
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const handleReset = () => {
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview);
-    }
-
-    setFormData(initialFormData);
-    setThumbnail(null);
-    setThumbnailPreview(null);
-    setError(null);
-    setMessage(null);
   };
 
   return (
@@ -254,7 +327,6 @@ export function TambahKaryaPage() {
             type="button"
             onClick={() => setError(null)}
             className="text-rose-500 hover:text-rose-700"
-            aria-label="Tutup pesan kesalahan"
           >
             <X size={17} />
           </button>
@@ -269,7 +341,6 @@ export function TambahKaryaPage() {
             type="button"
             onClick={() => setMessage(null)}
             className="text-emerald-500 hover:text-emerald-700"
-            aria-label="Tutup pesan berhasil"
           >
             <X size={17} />
           </button>
@@ -361,7 +432,7 @@ export function TambahKaryaPage() {
                 type="button"
                 onClick={() => void getCategories()}
                 disabled={loadingCategories}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline disabled:opacity-50"
               >
                 <RefreshCw
                   size={13}
@@ -370,12 +441,6 @@ export function TambahKaryaPage() {
                 Coba Lagi
               </button>
             </div>
-          )}
-
-          {!categoryError && !loadingCategories && categories.length > 0 && (
-            <p className="mt-1 text-xs text-gray-400">
-              Tersedia {categories.length} kategori dari database.
-            </p>
           )}
         </div>
 
@@ -400,7 +465,7 @@ export function TambahKaryaPage() {
 
           <div className="mt-1 flex items-center justify-between">
             <p className="text-xs text-gray-400">
-              Deskripsikan karya agar mudah dipahami oleh pengunjung.
+              Deskripsikan karya agar mudah dipahami.
             </p>
 
             <p className="text-xs text-gray-400">
@@ -425,7 +490,7 @@ export function TambahKaryaPage() {
               </p>
 
               <p className="mt-1 text-xs text-gray-400">
-                PNG, JPG, JPEG, atau WEBP dengan ukuran maksimal 5 MB
+                PNG, JPG, JPEG, atau WEBP maksimal 5 MB
               </p>
 
               <div className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white">
@@ -434,6 +499,7 @@ export function TambahKaryaPage() {
               </div>
 
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 onChange={handleThumbnailChange}
@@ -451,8 +517,7 @@ export function TambahKaryaPage() {
               <button
                 type="button"
                 onClick={removeThumbnail}
-                className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black"
-                aria-label="Hapus thumbnail"
+                className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-white hover:bg-black"
               >
                 <X size={18} />
               </button>
@@ -506,9 +571,12 @@ export function TambahKaryaPage() {
         <div className="flex flex-col-reverse justify-end gap-3 border-t border-gray-100 pt-6 sm:flex-row">
           <button
             type="button"
-            onClick={handleReset}
+            onClick={() => {
+              resetForm();
+              setMessage(null);
+            }}
             disabled={submitting}
-            className="rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-60"
           >
             Reset Form
           </button>

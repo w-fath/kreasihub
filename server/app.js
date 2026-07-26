@@ -26,7 +26,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+    "/uploads",
+    express.static(path.join(__dirname, "uploads")),
+);
 
 app.get("/", (req, res) => {
     return res.status(200).json({
@@ -73,7 +76,11 @@ const startServer = async () => {
             console.log(`Server berjalan di http://localhost:${PORT}`);
         });
     } catch (error) {
-        console.error("Gagal terhubung ke database:", error.message);
+        console.error(
+            "Gagal terhubung ke database:",
+            error.message,
+        );
+
         process.exit(1);
     }
 };
