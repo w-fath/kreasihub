@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { Lock, Mail } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 
@@ -9,11 +11,13 @@ interface LoginResponse {
   success: boolean;
   message: string;
   token?: string;
+
   data?: {
     id: number;
     name: string;
     email: string;
-    role: string;
+    role: "admin" | "creator";
+    status?: string;
   };
 }
 
@@ -21,20 +25,23 @@ const GoogleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 48 48"
-    className="w-5 h-5"
+    className="h-5 w-5"
   >
     <path
       fill="#FFC107"
-      d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.238-2.657-.611-3.917z"
+      d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.238-2.657-.611-3.917z"
     />
+
     <path
       fill="#FF3D00"
-      d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"
+      d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
     />
+
     <path
       fill="#4CAF50"
       d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
     />
+
     <path
       fill="#1976D2"
       d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.238-2.657-.611-3.917z"
@@ -46,8 +53,8 @@ const FacebookIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 320 512"
-    className="w-5 h-5"
-    fill="#1877F2"
+    className="h-4 w-4"
+    fill="currentColor"
   >
     <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
   </svg>
@@ -57,7 +64,7 @@ const XIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 512 512"
-    className="w-4 h-4"
+    className="h-4 w-4"
     fill="currentColor"
   >
     <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
@@ -65,14 +72,19 @@ const XIcon = () => (
 );
 
 export function LoginPage() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState<string | null>(null);
+
   const [success, setSuccess] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setError(null);
@@ -82,6 +94,7 @@ export function LoginPage() {
 
     if (!normalizedEmail || !password) {
       setError("Email dan password wajib diisi.");
+
       return;
     }
 
@@ -90,7 +103,12 @@ export function LoginPage() {
 
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+
         body: JSON.stringify({
           email: normalizedEmail,
           password,
@@ -101,32 +119,44 @@ export function LoginPage() {
 
       if (!response.ok || !result.success || !result.token || !result.data) {
         setError(result.message || "Login gagal dilakukan.");
+
         return;
       }
 
       localStorage.setItem("kreasihub_token", result.token);
+
       localStorage.setItem("kreasihub_user", JSON.stringify(result.data));
 
       setSuccess(result.message || "Login berhasil.");
 
       window.setTimeout(() => {
         if (result.data?.role === "admin") {
-          window.location.href = "/dashboard/admin";
+          navigate("/dashboard/admin", {
+            replace: true,
+          });
+
           return;
         }
 
         if (result.data?.role === "creator") {
-          window.location.href = "/dashboard/creator";
+          navigate("/dashboard/creator", {
+            replace: true,
+          });
+
           return;
         }
 
         localStorage.removeItem("kreasihub_token");
+
         localStorage.removeItem("kreasihub_user");
 
+        setSuccess(null);
+
         setError("Role pengguna tidak dikenali.");
-      }, 800);
+      }, 700);
     } catch (requestError) {
       console.error("Login request error:", requestError);
+
       setError(
         "Tidak dapat terhubung ke server. Pastikan backend sedang berjalan.",
       );
@@ -135,72 +165,86 @@ export function LoginPage() {
     }
   };
 
+  const handleUnavailableFeature = (feature: string) => {
+    setSuccess(null);
+
+    setError(`${feature} belum tersedia.`);
+  };
+
   return (
-    <div className="min-h-screen bg-white font-sans text-neutral-dark flex flex-col">
-      {/* Header */}
-      <header className="w-full flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-12">
-          <a
-            href="/"
-            className="text-3xl font-black italic tracking-tighter uppercase text-black hover:opacity-80"
+    <div className="flex min-h-screen flex-col bg-white font-sans text-gray-900">
+      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 md:px-8 md:py-6">
+        <div className="flex items-center gap-8 lg:gap-12">
+          <Link
+            to="/"
+            className="text-3xl font-black italic uppercase tracking-tighter text-black transition hover:opacity-75"
           >
             ETCH
-          </a>
+          </Link>
 
-          <nav className="hidden md:flex items-center space-x-8">
-            <a
-              href="#"
-              className="text-sm font-bold hover:text-gray-600 transition-colors"
+          <nav className="hidden items-center gap-8 md:flex">
+            <Link
+              to="/"
+              className="text-sm font-bold text-gray-500 transition hover:text-black"
             >
               Jelajahi
-            </a>
-            <a
-              href="#"
-              className="text-sm font-bold hover:text-gray-600 transition-colors"
+            </Link>
+
+            <Link
+              to="/kreator"
+              className="text-sm font-bold text-gray-500 transition hover:text-black"
             >
               Kreator
-            </a>
-            <a
-              href="#"
-              className="text-sm font-bold hover:text-gray-600 transition-colors"
+            </Link>
+
+            <Link
+              to="/#komunitas"
+              className="text-sm font-bold text-gray-500 transition hover:text-black"
             >
               Komunitas
-            </a>
+            </Link>
           </nav>
         </div>
 
-        <div className="flex items-center space-x-6">
-          <a
-            href="/register"
-            className="text-sm font-bold hover:text-gray-600 transition-colors"
+        <div className="flex items-center gap-4 sm:gap-6">
+          <Link
+            to="/register"
+            className="text-sm font-bold text-gray-600 transition hover:text-black"
           >
             Daftar
-          </a>
+          </Link>
 
-          <a href="/login">
-            <Button className="bg-black text-white hover:bg-gray-800 rounded-lg px-6 py-2 h-10 font-bold border border-black">
-              Masuk
-            </Button>
-          </a>
+          <Link
+            to="/login"
+            className="flex h-10 items-center rounded-lg border border-black bg-black px-6 text-sm font-bold text-white transition hover:bg-gray-800"
+          >
+            Masuk
+          </Link>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-[20px] border border-gray-200 shadow-[6px_6px_0px_0px_rgba(220,220,220,0.5)] p-10">
-            <div className="flex flex-col items-center mb-8">
-              <h2 className="text-3xl font-bold tracking-wide">MASUK</h2>
+          <div className="rounded-[24px] border border-gray-200 bg-white p-7 shadow-[7px_7px_0px_0px_rgba(229,231,235,0.9)] sm:p-10">
+            <div className="mb-8 flex flex-col items-center">
+              <h1 className="text-3xl font-black tracking-wide text-black">
+                MASUK
+              </h1>
+
+              <p className="mt-3 text-center text-sm leading-6 text-gray-500">
+                Masuk untuk mengelola karya dan menemukan kreator favoritmu.
+              </p>
 
               {error && (
-                <p className="text-red-600 text-sm mt-4 font-medium text-center">
+                <div className="mt-5 w-full rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-center text-sm font-medium text-rose-600">
                   {error}
-                </p>
+                </div>
               )}
+
               {success && (
-                <p className="text-green-600 text-sm mt-4 font-medium text-center">
+                <div className="mt-5 w-full rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-center text-sm font-medium text-emerald-600">
                   {success}
-                </p>
+                </div>
               )}
             </div>
 
@@ -213,9 +257,9 @@ export function LoginPage() {
                 autoComplete="email"
                 disabled={loading}
                 leftIcon={
-                  <Mail size={18} className="text-black" strokeWidth={2.5} />
+                  <Mail size={18} className="text-black" strokeWidth={2.4} />
                 }
-                className="rounded-full border-gray-300 font-medium placeholder:text-gray-400 placeholder:font-medium h-12"
+                className="h-12 rounded-full border-gray-300 font-medium placeholder:font-medium placeholder:text-gray-400 focus:border-black focus:ring-black/10"
               />
 
               <Input
@@ -226,39 +270,43 @@ export function LoginPage() {
                 autoComplete="current-password"
                 disabled={loading}
                 leftIcon={
-                  <Lock size={18} className="text-black" strokeWidth={2.5} />
+                  <Lock size={18} className="text-black" strokeWidth={2.4} />
                 }
-                className="rounded-full border-gray-300 font-medium placeholder:text-gray-400 placeholder:font-medium h-12"
+                className="h-12 rounded-full border-gray-300 font-medium placeholder:font-medium placeholder:text-gray-400 focus:border-black focus:ring-black/10"
               />
 
-              <div className="flex justify-start pt-1">
-                <a
-                  href="#"
-                  className="text-xs font-bold text-gray-400 hover:text-gray-600"
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleUnavailableFeature("Fitur lupa password")
+                  }
+                  className="text-xs font-bold text-gray-400 transition hover:text-black"
                 >
                   Lupa Password?
-                </a>
+                </button>
               </div>
 
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-full bg-black text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60 h-12 font-bold text-lg mt-2"
+                className="mt-2 h-12 w-full rounded-full border border-black bg-black text-base font-bold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Memproses..." : "Masuk"}
               </Button>
             </form>
 
             <div className="mt-8 text-center">
-              <p className="text-xs font-bold text-gray-400 mb-4">
+              <p className="mb-4 text-xs font-bold text-gray-400">
                 atau masuk dengan
               </p>
 
-              <div className="flex items-center justify-center space-x-4 mb-8">
+              <div className="mb-8 flex items-center justify-center gap-4">
                 <button
                   type="button"
                   aria-label="Masuk menggunakan Google"
-                  className="flex items-center justify-center w-16 h-10 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={() => handleUnavailableFeature("Login Google")}
+                  className="flex h-10 w-16 items-center justify-center rounded-lg border border-gray-200 bg-white transition hover:border-gray-300 hover:bg-gray-50"
                 >
                   <GoogleIcon />
                 </button>
@@ -266,7 +314,8 @@ export function LoginPage() {
                 <button
                   type="button"
                   aria-label="Masuk menggunakan Facebook"
-                  className="flex items-center justify-center w-16 h-10 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={() => handleUnavailableFeature("Login Facebook")}
+                  className="flex h-10 w-16 items-center justify-center rounded-lg border border-gray-200 bg-white text-black transition hover:border-black hover:bg-gray-50"
                 >
                   <FacebookIcon />
                 </button>
@@ -274,7 +323,8 @@ export function LoginPage() {
                 <button
                   type="button"
                   aria-label="Masuk menggunakan X"
-                  className="flex items-center justify-center w-16 h-10 border border-gray-200 rounded-lg hover:bg-gray-800 transition-colors bg-black text-white"
+                  onClick={() => handleUnavailableFeature("Login X")}
+                  className="flex h-10 w-16 items-center justify-center rounded-lg border border-black bg-black text-white transition hover:bg-gray-800"
                 >
                   <XIcon />
                 </button>
@@ -282,12 +332,12 @@ export function LoginPage() {
 
               <p className="text-xs font-bold text-gray-400">
                 Belum memiliki akun?{" "}
-                <a
-                  href="/register"
-                  className="text-gray-500 hover:text-gray-700"
+                <Link
+                  to="/register"
+                  className="text-black transition hover:text-gray-600 hover:underline"
                 >
                   Daftar
-                </a>
+                </Link>
               </p>
             </div>
           </div>

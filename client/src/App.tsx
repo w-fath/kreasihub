@@ -1,9 +1,12 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
+import { DetailKaryaPage } from "./pages/DetailKaryaPage";
 import { KreatorPage } from "./pages/KreatorPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
+import { ProfilKreatorPage } from "./pages/ProfilKreatorPage";
 import { RegisterPage } from "./pages/RegisterPage";
 
 import { AdminLayout } from "./pages/dashboard/admin/layouts/AdminLayout";
@@ -25,11 +28,21 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Halaman publik */}
         <Route path="/" element={<LandingPage />} />
+
         <Route path="/kreator" element={<KreatorPage />} />
+
+        <Route path="/kreator/:slug" element={<ProfilKreatorPage />} />
+
+        <Route path="/karya/:slug" element={<DetailKaryaPage />} />
+
+        {/* Autentikasi */}
         <Route path="/login" element={<LoginPage />} />
+
         <Route path="/register" element={<RegisterPage />} />
 
+        {/* Dashboard admin */}
         <Route
           path="/dashboard/admin"
           element={
@@ -39,13 +52,19 @@ export default function App() {
           }
         >
           <Route index element={<AdminRingkasanPage />} />
+
           <Route path="pengguna" element={<PenggunaPage />} />
+
           <Route path="karya" element={<KaryaPage />} />
+
           <Route path="kategori" element={<KategoriPage />} />
+
           <Route path="laporan" element={<LaporanPage />} />
+
           <Route path="pengaturan" element={<AdminPengaturanPage />} />
         </Route>
 
+        {/* Dashboard creator */}
         <Route
           path="/dashboard/creator"
           element={
@@ -55,13 +74,17 @@ export default function App() {
           }
         >
           <Route index element={<CreatorRingkasanPage />} />
+
           <Route path="karya" element={<KaryaSayaPage />} />
+
           <Route path="karya/tambah" element={<TambahKaryaPage />} />
+
           <Route path="profil" element={<ProfilPage />} />
+
           <Route path="pengaturan" element={<CreatorPengaturanPage />} />
         </Route>
 
-        <Route path="*" element={<LandingPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
