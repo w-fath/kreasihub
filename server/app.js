@@ -25,6 +25,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
     "/uploads",
     express.static(path.join(__dirname, "uploads")),
@@ -49,7 +50,6 @@ app.use((req, res) => {
         message: "Endpoint tidak ditemukan.",
     });
 });
-
 
 app.use((error, req, res, next) => {
     console.error("Unhandled server error:", error);
