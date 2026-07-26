@@ -39,6 +39,28 @@ const UploadIcon = () => (
   </svg>
 );
 
+const StarIcon = ({ filled, half = false }: { filled: boolean; half?: boolean }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" fill={filled ? '#FACC15' : half ? 'url(#half)' : 'none'} stroke={filled || half ? '#FACC15' : '#D1D5DB'} strokeWidth="1.5">
+    {half && (
+      <defs>
+        <linearGradient id="half">
+          <stop offset="50%" stopColor="#FACC15" />
+          <stop offset="50%" stopColor="transparent" />
+        </linearGradient>
+      </defs>
+    )}
+    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+  </svg>
+);
+
+const ThumbUpIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/>
+    <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+  </svg>
+);
+
+// ─── Mock Data ────────────────────────────────────────────────
 const mockPosts = [
   'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=600&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop',
@@ -47,6 +69,148 @@ const mockPosts = [
   'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop',
 ];
 
+const mockPopular = [
+  'https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1523895665936-7bfe172b757d?q=80&w=600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop',
+];
+
+interface Review {
+  id: number;
+  name: string;
+  avatar: string;
+  role: string;
+  rating: number;
+  date: string;
+  comment: string;
+  helpfulCount: number;
+  projectTitle: string;
+}
+
+const mockReviews: Review[] = [
+  {
+    id: 1,
+    name: 'Sari Dewi',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop',
+    role: 'Product Manager',
+    rating: 5,
+    date: '12 Juli 2026',
+    comment: 'John adalah desainer yang sangat berbakat! Hasil kerjanya melampaui ekspektasi saya. UI yang dia rancang sangat intuitif dan estetis. Komunikasinya juga sangat baik selama proses pengerjaan. Sangat direkomendasikan!',
+    helpfulCount: 18,
+    projectTitle: 'Dashboard Analytics App',
+  },
+  {
+    id: 2,
+    name: 'Budi Santoso',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop',
+    role: 'Startup Founder',
+    rating: 4,
+    date: '3 Juni 2026',
+    comment: 'Kerja sama yang sangat menyenangkan. John memahami kebutuhan bisnis saya dengan cepat dan menghasilkan desain yang sesuai dengan brand kami. Hanya sedikit revisi yang diperlukan.',
+    helpfulCount: 11,
+    projectTitle: 'Landing Page Redesign',
+  },
+  {
+    id: 3,
+    name: 'Anisa Rahmawati',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&auto=format&fit=crop',
+    role: 'UX Researcher',
+    rating: 5,
+    date: '20 Mei 2026',
+    comment: 'Kolaborasi yang luar biasa! John tidak hanya fokus pada visual tapi juga memperhatikan aspek usability dan aksesibilitas. Hasilnya benar-benar berkualitas tinggi.',
+    helpfulCount: 24,
+    projectTitle: 'Mobile App UI Kit',
+  },
+  {
+    id: 4,
+    name: 'Rizky Pratama',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop',
+    role: 'Developer',
+    rating: 4,
+    date: '8 April 2026',
+    comment: 'John memberikan desain yang rapi dan mudah di-implement. File Figma-nya sangat terorganisir dengan komponen yang jelas. Proses handoff berjalan sangat smooth.',
+    helpfulCount: 7,
+    projectTitle: 'E-commerce Web Design',
+  },
+];
+
+const ratingDistribution = [
+  { star: 5, count: 38, pct: 76 },
+  { star: 4, count: 9,  pct: 18 },
+  { star: 3, count: 2,  pct: 4  },
+  { star: 2, count: 1,  pct: 2  },
+  { star: 1, count: 0,  pct: 0  },
+];
+
+const overallRating = 4.7;
+const totalReviews = 50;
+
+// ─── Sub-components ───────────────────────────────────────────
+function StarRow({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <StarIcon key={s} filled={s <= Math.floor(rating)} half={s === Math.ceil(rating) && rating % 1 >= 0.5} />
+      ))}
+    </div>
+  );
+}
+
+function ReviewCard({ review }: { review: Review }) {
+  const [liked, setLiked] = useState(false);
+
+  return (
+    <div className="border border-gray-100 rounded-2xl p-5 hover:shadow-sm transition-shadow bg-white">
+      {/* Reviewer header */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <img
+            src={review.avatar}
+            alt={review.name}
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-100"
+          />
+          <div>
+            <p className="text-sm font-bold text-gray-900">{review.name}</p>
+            <p className="text-xs text-gray-500">{review.role}</p>
+          </div>
+        </div>
+        <span className="text-xs text-gray-400">{review.date}</span>
+      </div>
+
+      {/* Stars & project */}
+      <div className="flex items-center gap-2 mb-2">
+        <StarRow rating={review.rating} />
+        <span className="text-xs text-gray-400 font-medium">untuk</span>
+        <span className="text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded-full">
+          {review.projectTitle}
+        </span>
+      </div>
+
+      {/* Comment */}
+      <p className="text-sm text-gray-600 leading-relaxed mb-4">{review.comment}</p>
+
+      {/* Helpful */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setLiked((v) => !v)}
+          className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all ${
+            liked
+              ? 'bg-black text-white border-black'
+              : 'text-gray-500 border-gray-200 hover:border-gray-400'
+          }`}
+        >
+          <ThumbUpIcon />
+          <span>Membantu ({liked ? review.helpfulCount + 1 : review.helpfulCount})</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Page ────────────────────────────────────────────────
 type Tab = 'Posting' | 'Review' | 'Popular' | 'Tentang';
 
 export function ProfilePage() {
@@ -54,7 +218,7 @@ export function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 flex flex-col">
-      {/* Header */}
+      {/* ── Header ── */}
       <header className="w-full flex items-center justify-between px-8 py-5 max-w-7xl mx-auto">
         <div className="flex items-center space-x-10">
           <a href="/" className="text-3xl font-black italic tracking-tighter uppercase text-black hover:opacity-80">
@@ -76,7 +240,7 @@ export function ProfilePage() {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* ── Main Content ── */}
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-8">
 
         {/* Cover Photo */}
@@ -88,7 +252,7 @@ export function ProfilePage() {
           />
         </div>
 
-        {/* Avatar - overlapping cover */}
+        {/* Avatar */}
         <div className="relative -mt-14 ml-6 mb-4">
           <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden bg-gray-100 shadow-md">
             <img
@@ -99,9 +263,8 @@ export function ProfilePage() {
           </div>
         </div>
 
-        {/* Profile Info Row */}
+        {/* Profile Info */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 px-2">
-          {/* Left: Name, role, location, link */}
           <div>
             <h1 className="text-2xl font-black text-gray-900">John Doe</h1>
             <p className="text-sm text-blue-600 font-semibold mt-0.5">UI/UX | Web Design</p>
@@ -117,7 +280,6 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* Right: Stats + Edit button */}
           <div className="flex flex-col items-end gap-3">
             <div className="flex items-center gap-8">
               <div className="text-center">
@@ -157,16 +319,22 @@ export function ProfilePage() {
                 }`}
               >
                 {tab}
+                {tab === 'Review' && (
+                  <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${activeTab === tab ? 'bg-white text-black' : 'bg-gray-100 text-gray-600'}`}>
+                    {totalReviews}
+                  </span>
+                )}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Tab Content */}
+        {/* ── Tab Content ── */}
         <div className="mt-6 pb-20">
+
+          {/* POSTING TAB */}
           {activeTab === 'Posting' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {/* Upload CTA Card */}
               <div className="border border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[180px] bg-gray-50 hover:bg-gray-100 transition-colors">
                 <UploadIcon />
                 <h3 className="text-sm font-bold text-gray-800 mt-3">Unggah karya pertamamu</h3>
@@ -180,49 +348,115 @@ export function ProfilePage() {
                   Unggah
                 </button>
               </div>
-
-              {/* Empty post placeholders */}
-              {mockPosts.slice(0, 2).map((src, i) => (
-                <div
-                  key={i}
-                  className="border border-gray-100 rounded-xl overflow-hidden min-h-[180px] bg-gray-50 hover:shadow-md transition-shadow cursor-pointer group"
-                >
-                  <img
-                    src={src}
-                    alt={`Post ${i + 1}`}
-                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                  />
-                </div>
-              ))}
-
-              {/* Second row empty cards */}
-              {mockPosts.slice(2, 5).map((src, i) => (
-                <div
-                  key={i + 3}
-                  className="border border-gray-100 rounded-xl overflow-hidden min-h-[180px] bg-gray-50 hover:shadow-md transition-shadow cursor-pointer group"
-                >
-                  <img
-                    src={src}
-                    alt={`Post ${i + 4}`}
-                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                  />
+              {mockPosts.map((src, i) => (
+                <div key={i} className="border border-gray-100 rounded-xl overflow-hidden min-h-[180px] bg-gray-50 hover:shadow-md transition-shadow cursor-pointer group">
+                  <img src={src} alt={`Post ${i + 1}`} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
                 </div>
               ))}
             </div>
           )}
 
+          {/* REVIEW TAB */}
           {activeTab === 'Review' && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-gray-400 text-sm font-medium">Belum ada ulasan</p>
+            <div className="space-y-8">
+
+              {/* Rating Summary Card */}
+              <div className="border border-gray-100 rounded-2xl p-6 bg-gray-50">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+
+                  {/* Big score */}
+                  <div className="flex flex-col items-center text-center shrink-0">
+                    <p className="text-6xl font-black text-gray-900 leading-none">{overallRating}</p>
+                    <div className="mt-2">
+                      <StarRow rating={overallRating} />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">{totalReviews} ulasan</p>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="hidden sm:block w-px self-stretch bg-gray-200" />
+
+                  {/* Distribution bars */}
+                  <div className="flex-1 w-full space-y-2">
+                    {ratingDistribution.map(({ star, count, pct }) => (
+                      <div key={star} className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-gray-600 w-4 text-right">{star}</span>
+                        <StarIcon filled={true} />
+                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-gray-500 w-6">{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA button */}
+                <div className="mt-6 pt-4 border-t border-gray-200 flex justify-end">
+                  <button
+                    id="write-review-btn"
+                    className="bg-black text-white text-xs font-bold px-6 py-2.5 rounded-full hover:bg-gray-800 transition-colors"
+                  >
+                    + Tulis Ulasan
+                  </button>
+                </div>
+              </div>
+
+              {/* Sort/Filter bar */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-bold text-gray-700">Semua Ulasan <span className="text-gray-400 font-normal">({totalReviews})</span></p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">Urutkan:</span>
+                  <select className="text-xs font-semibold border border-gray-200 rounded-full px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-gray-200 cursor-pointer">
+                    <option>Terbaru</option>
+                    <option>Rating tertinggi</option>
+                    <option>Rating terendah</option>
+                    <option>Paling membantu</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Review Cards */}
+              <div className="space-y-4">
+                {mockReviews.map((review) => (
+                  <ReviewCard key={review.id} review={review} />
+                ))}
+              </div>
+
+              {/* Load more */}
+              <div className="flex justify-center pt-4">
+                <button className="px-8 py-2.5 rounded-full border border-gray-300 text-sm font-bold hover:bg-gray-50 transition-colors">
+                  Tampilkan lebih banyak
+                </button>
+              </div>
             </div>
           )}
 
+          {/* POPULAR TAB */}
           {activeTab === 'Popular' && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-gray-400 text-sm font-medium">Belum ada konten populer</p>
+            <div>
+              <p className="text-sm text-gray-500 mb-4">Karya dengan keterlibatan tertinggi</p>
+              <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
+                {mockPopular.map((src, i) => (
+                  <div key={i} className="break-inside-avoid border border-gray-100 rounded-xl overflow-hidden bg-gray-50 hover:shadow-md transition-shadow cursor-pointer group">
+                    <img src={src} alt={`Popular ${i + 1}`} className="w-full h-auto object-cover group-hover:scale-[1.03] transition-transform duration-300" />
+                    <div className="p-3 flex items-center justify-between">
+                      <p className="text-xs font-bold text-gray-700 truncate">Karya #{i + 1}</p>
+                      <span className="flex items-center gap-1 text-xs text-gray-500">
+                        <StarIcon filled={true} />
+                        {(4.2 + i * 0.1).toFixed(1)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
+          {/* TENTANG TAB */}
           {activeTab === 'Tentang' && (
             <div className="max-w-xl py-8">
               <h2 className="text-lg font-black mb-4">Tentang John Doe</h2>
@@ -247,18 +481,16 @@ export function ProfilePage() {
         </div>
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer className="w-full max-w-7xl mx-auto px-8 py-10 flex flex-col md:flex-row items-center justify-between border-t border-gray-100">
         <div className="mb-6 md:mb-0">
           <h2 className="text-3xl font-black italic tracking-tighter uppercase text-black">ETCH</h2>
         </div>
-
         <div className="flex items-center space-x-12 mb-6 md:mb-0">
           <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Tentang</a>
           <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Karir</a>
           <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Bantuan</a>
         </div>
-
         <div className="flex items-center space-x-4">
           <a href="#" className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
             <FacebookIcon />
