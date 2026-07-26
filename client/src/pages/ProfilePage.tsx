@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
 
+const BellIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+  </svg>
+);
+
+const UserCircleIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
 const FacebookIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" className="w-4 h-4" fill="currentColor">
     <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/>
@@ -230,13 +244,23 @@ export function ProfilePage() {
             <a href="#" className="text-sm font-bold hover:text-gray-600 transition-colors">Komunitas</a>
           </nav>
         </div>
-        <div className="flex items-center space-x-6">
-          <a href="/register" className="text-sm font-bold hover:text-gray-600 transition-colors">Daftar</a>
-          <a href="/login">
-            <button className="bg-black text-white hover:bg-gray-800 rounded-lg px-6 py-2 h-10 font-bold border border-black text-sm transition-colors">
-              Masuk
-            </button>
-          </a>
+        <div className="flex items-center space-x-3">
+          <button
+            id="notif-btn"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors relative"
+            title="Notifikasi"
+          >
+            <BellIcon />
+            {/* Unread dot */}
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+          </button>
+          <button
+            id="user-menu-btn"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+            title="Akun"
+          >
+            <UserCircleIcon />
+          </button>
         </div>
       </header>
 
