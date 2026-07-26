@@ -2,6 +2,9 @@
 client/node_modules/
 server/node_modules/
 
+# Uploaded files
+server/uploads/
+
 # Environment
 client/.env
 server/.env

@@ -180,7 +180,7 @@ export function LandingPage() {
             </a>
 
             <a
-              href="#kreator"
+              href="kreator"
               className="text-sm font-bold transition-colors hover:text-gray-600"
             >
               Kreator
