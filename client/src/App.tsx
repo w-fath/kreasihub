@@ -3,6 +3,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { KreatorPage } from "./pages/KreatorPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { ProfilePage } from "./pages/ProfilePage";
 import { CreatorDashboard } from "./pages/dashboard/creator/Dashboard";
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard/creator" element={<CreatorDashboard />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );
