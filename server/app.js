@@ -10,6 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const workRoutes = require("./routes/workRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -24,6 +25,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
     "/uploads",
     express.static(path.join(__dirname, "uploads")),
@@ -40,6 +42,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/creator/works", workRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({
@@ -47,7 +50,6 @@ app.use((req, res) => {
         message: "Endpoint tidak ditemukan.",
     });
 });
-
 
 app.use((error, req, res, next) => {
     console.error("Unhandled server error:", error);
