@@ -10,7 +10,10 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const workRoutes = require("./routes/workRoutes");
+const creatorProfileRoutes = require("./routes/creatorProfileRoutes");
+const creatorSettingsRoutes = require("./routes/creatorSettingsRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -41,7 +44,11 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
+
+app.use("/api/creator/profile", creatorProfileRoutes);
 app.use("/api/creator/works", workRoutes);
+app.use("/api/creator/settings", creatorSettingsRoutes);
+
 app.use("/api/admin", adminRoutes);
 
 app.use((req, res) => {
