@@ -733,12 +733,12 @@ export function LandingPage() {
               Kreator
             </Link>
 
-            <a
-              href="#komunitas"
+            <Link
+              to="/komunitas"
               className="text-sm font-bold text-gray-400 transition hover:text-black"
             >
               Komunitas
-            </a>
+            </Link>
           </nav>
         </div>
 

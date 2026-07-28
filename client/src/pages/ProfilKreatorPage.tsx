@@ -470,12 +470,12 @@ export function ProfilKreatorPage() {
               Kreator
             </Link>
 
-            <a
-              href="#komunitas"
-              className="text-sm font-bold text-gray-400 hover:text-black"
+            <Link
+              to="/komunitas"
+              className="text-sm font-bold text-gray-400 transition hover:text-black"
             >
               Komunitas
-            </a>
+            </Link>
           </nav>
         </div>
 
