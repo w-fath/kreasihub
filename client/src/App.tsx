@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 import { DetailKaryaPage } from "./pages/DetailKaryaPage";
+import { KomunitasPage } from "./pages/KomunitasPage";
 import { KreatorPage } from "./pages/KreatorPage";
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -28,7 +29,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Halaman publik */}
         <Route path="/" element={<LandingPage />} />
 
         <Route path="/kreator" element={<KreatorPage />} />
@@ -37,12 +37,12 @@ export default function App() {
 
         <Route path="/karya/:slug" element={<DetailKaryaPage />} />
 
-        {/* Autentikasi */}
+        <Route path="/komunitas" element={<KomunitasPage />} />
+
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* Dashboard admin */}
         <Route
           path="/dashboard/admin"
           element={
@@ -64,7 +64,6 @@ export default function App() {
           <Route path="pengaturan" element={<AdminPengaturanPage />} />
         </Route>
 
-        {/* Dashboard creator */}
         <Route
           path="/dashboard/creator"
           element={

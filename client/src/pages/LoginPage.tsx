@@ -198,8 +198,8 @@ export function LoginPage() {
             </Link>
 
             <Link
-              to="/#komunitas"
-              className="text-sm font-bold text-gray-500 transition hover:text-black"
+              to="/komunitas"
+              className="text-sm font-bold text-gray-400 transition hover:text-black"
             >
               Komunitas
             </Link>
