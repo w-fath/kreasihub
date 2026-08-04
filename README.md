@@ -1,12 +1,12 @@
-# KreasiHub
+# ETCH
 
-KreasiHub adalah platform direktori kreatif dan portofolio digital yang digunakan untuk menampilkan, mengelola, dan mengeksplorasi karya para kreator.
+ETCH adalah platform direktori kreatif dan portofolio digital yang digunakan untuk menampilkan, mengelola, dan mengeksplorasi karya para kreator.
 
 Project ini dikembangkan sebagai tugas kelompok Program Magang Mandiri dan Studi Independen Bersertifikat (MSIB) pada Divisi Web Developer PT Vinix Seven Aurum.
 
 ## Tujuan Project
 
-KreasiHub dikembangkan untuk:
+ETCH dikembangkan untuk:
 
 - Menyediakan tempat bagi kreator untuk menampilkan karya dan portofolio digital.
 - Memudahkan pengguna dalam menemukan karya berdasarkan kategori.
@@ -64,7 +64,7 @@ Fitur yang telah dan sedang dikembangkan:
 ## Struktur Project
 
 ```text
-kreasihub/
+etch/
 ├── client/
 │   ├── public/
 │   ├── src/
@@ -102,8 +102,8 @@ Pastikan perangkat sudah memiliki:
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/w-fath/kreasihub.git
-cd kreasihub
+git clone https://github.com/w-fath/etch.git
+cd etch
 ```
 
 ### 2. Instal dependency frontend
@@ -151,7 +151,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
-DB_NAME=kreasihub
+DB_NAME=etch
 
 JWT_SECRET=ganti_dengan_secret_acak
 JWT_EXPIRES_IN=1d
@@ -164,12 +164,12 @@ Gunakan nilai `JWT_SECRET` yang berbeda pada setiap perangkat. Jangan mengunggah
 Buat database MySQL:
 
 ```sql
-CREATE DATABASE kreasihub
+CREATE DATABASE etch
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_general_ci;
 ```
 
-Kemudian pilih database `kreasihub` dan buat tabel `users`:
+Kemudian pilih database `etch` dan buat tabel `users`:
 
 ```sql
 CREATE TABLE users (
